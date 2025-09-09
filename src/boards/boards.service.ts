@@ -36,4 +36,10 @@ export class BoardsService {
   deleteBoard(id: string): void {
     this.boards = this.boards.filter((board) => board.id !== id); // id가 다른 것들만 남기기
   }
+
+  updateBoardStatus(id: string, status: BoardStatus): Board {
+    const board = this.getBoardById(id);
+    board.status = status;
+    return board;
+  }
 }
