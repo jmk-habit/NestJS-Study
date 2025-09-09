@@ -26,11 +26,20 @@ export class BoardsService {
   }
 
   async getBoardById(id: number): Promise<Board> {
-    const found = await this.boardRepository.findOne({ where: { id } }); // 'where: {id}'란 id 컬럼이 id인 것을 찾는다는 뜻
+    // 'where: {id}'란 id 컬럼이 id인 것을 찾는다는 뜻
+    const found = await this.boardRepository.findOne({ where: { id } });
     if (!found) {
       throw new NotFoundException(`Can't find Board with id ${id}`);
     }
     return found;
+  }
+
+  async deleteBoard(id: number): Promise<void> {
+    const result = await this.boardRepository.delete(id);
+    if (result.affected === 0) {
+      throw new NotFoundException(`Can't find Board with id ${id}`);
+    }
+    console.log('result', result);
   }
   // getAllBoards(): Board[] {
   //   return this.boards;

@@ -1,5 +1,5 @@
-import { Controller, UsePipes, Post, Body } from '@nestjs/common';
-import { Get, Param } from '@nestjs/common';
+import { Controller, UsePipes, Post, Body, ParseIntPipe } from '@nestjs/common';
+import { Get, Delete, Param } from '@nestjs/common';
 import { BoardsService } from './boards.service';
 import { Board } from './board.entity';
 import { CreateBoardDto } from './dto/create-board.dto';
@@ -18,6 +18,11 @@ export class BoardsController {
   @Get('/:id')
   getBoardById(@Param('id') id: number): Promise<Board> {
     return this.boardsService.getBoardById(id);
+  }
+
+  @Delete('/:id')
+  deleteBoard(@Param('id', ParseIntPipe) id): Promise<void> {
+    return this.boardsService.deleteBoard(id);
   }
   // constructor(private boardsService: BoardsService) {}
   // @Get('/')
