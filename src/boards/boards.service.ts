@@ -23,4 +23,13 @@ export class BoardsService {
     this.boards.push(board);
     return board;
   }
+
+  // 못찾으면 NotFoundException 던지기
+  getBoardById(id: string): Board {
+    const found = this.boards.find((board) => board.id === id);
+    if (!found) {
+      throw new Error(`Board with ID "${id}" not found`);
+    }
+    return found;
+  }
 }
