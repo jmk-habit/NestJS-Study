@@ -32,4 +32,8 @@ export class BoardsService {
     }
     return found;
   }
+
+  deleteBoard(id: string): void {
+    this.boards = this.boards.filter((board) => board.id !== id); // id가 다른 것들만 남기기
+  }
 }
