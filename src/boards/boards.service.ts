@@ -1,14 +1,29 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { BoardRepository } from './board.repository';
 import { Board } from './board.entity';
+import { CreateBoardDto } from './dto/create-board.dto';
+import { BoardStatus } from './board-status.enum';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class BoardsService {
   constructor(
-    @InjectRepository(BoardRepository) // Repository 상속받은 BoardRepository 주입
-    private boardRepository: BoardRepository,
+    // 리포지토리 클래스를 따로 만들지 말고, 그냥 @InjectRepository(Board)로 엔티티 리포지토리를 주입
+    @InjectRepository(Board)
+    private boardRepository: Repository<Board>,
   ) {}
+
+  async createBoard(createBoardDto: CreateBoardDto): Promise<Board> {
+    const { title, description } = createBoardDto;
+    const board = this.boardRepository.create({
+      title,
+      description,
+      status: BoardStatus.PUBLIC,
+    });
+
+    await this.boardRepository.save(board);
+    return board;
+  }
 
   async getBoardById(id: number): Promise<Board> {
     const found = await this.boardRepository.findOne({ where: { id } }); // 'where: {id}'란 id 컬럼이 id인 것을 찾는다는 뜻
