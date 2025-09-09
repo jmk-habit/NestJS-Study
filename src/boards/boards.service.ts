@@ -13,6 +13,21 @@ export class BoardsService {
     private boardRepository: Repository<Board>,
   ) {}
 
+  // getAllBoards(): Board[] {
+  //   return this.boards;
+  // }
+  // createBoard(createBoardDto: CreateBoardDto) {
+  //   const { title, description } = createBoardDto;
+  //   const board: Board = {
+  //     id: uuid(),
+  //     title,
+  //     description,
+  //     status: BoardStatus.PUBLIC,
+  //   };
+  //   this.boards.push(board);
+  //   return board;
+  // }
+
   async createBoard(createBoardDto: CreateBoardDto): Promise<Board> {
     const { title, description } = createBoardDto;
     const board = this.boardRepository.create({
@@ -25,6 +40,15 @@ export class BoardsService {
     return board;
   }
 
+  // 못찾으면 NotFoundException 던지기
+  // getBoardById(id: string): Board {
+  //   const found = this.boards.find((board) => board.id === id);
+  //   if (!found) {
+  //     throw new NotFoundException(`Board with ID "${id}" not found`);
+  //   }
+  //   return found;
+  // }
+
   async getBoardById(id: number): Promise<Board> {
     // 'where: {id}'란 id 컬럼이 id인 것을 찾는다는 뜻
     const found = await this.boardRepository.findOne({ where: { id } });
@@ -33,6 +57,16 @@ export class BoardsService {
     }
     return found;
   }
+
+  // deleteBoard(id: string): void {
+  //   const found = this.getBoardById(id); // 해당 id의 게시물이 있는지 확인
+  //   this.boards = this.boards.filter((board) => board.id !== found.id); // id가 다른 것들만 남기기
+  // }
+  // updateBoardStatus(id: string, status: BoardStatus): Board {
+  //   const board = this.getBoardById(id);
+  //   board.status = status;
+  //   return board;
+  // }
 
   async deleteBoard(id: number): Promise<void> {
     const result = await this.boardRepository.delete(id);
@@ -50,35 +84,4 @@ export class BoardsService {
 
     return board;
   }
-  // getAllBoards(): Board[] {
-  //   return this.boards;
-  // }
-  // createBoard(createBoardDto: CreateBoardDto) {
-  //   const { title, description } = createBoardDto;
-  //   const board: Board = {
-  //     id: uuid(),
-  //     title,
-  //     description,
-  //     status: BoardStatus.PUBLIC,
-  //   };
-  //   this.boards.push(board);
-  //   return board;
-  // }
-  // // 못찾으면 NotFoundException 던지기
-  // getBoardById(id: string): Board {
-  //   const found = this.boards.find((board) => board.id === id);
-  //   if (!found) {
-  //     throw new NotFoundException(`Board with ID "${id}" not found`);
-  //   }
-  //   return found;
-  // }
-  // deleteBoard(id: string): void {
-  //   const found = this.getBoardById(id); // 해당 id의 게시물이 있는지 확인
-  //   this.boards = this.boards.filter((board) => board.id !== found.id); // id가 다른 것들만 남기기
-  // }
-  // updateBoardStatus(id: string, status: BoardStatus): Board {
-  //   const board = this.getBoardById(id);
-  //   board.status = status;
-  //   return board;
-  // }
 }
