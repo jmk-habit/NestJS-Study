@@ -14,6 +14,5 @@ export class AuthService {
     const { username, password } = authCredentialsDto;
     const user = this.userRepository.create({ username, password });
     await this.userRepository.save(user);
-    console.log('회원가입 되었습니다');
   }
 }
