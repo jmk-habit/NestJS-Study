@@ -1,8 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AuthCredentialsDto } from './dto/auth-credential.dto';
 import { Repository } from 'typeorm';
 import { User } from './user.entity';
+import * as bcrypt from 'bcryptjs';
 
 @Injectable()
 export class AuthService {
@@ -12,7 +13,22 @@ export class AuthService {
 
   async signUp(authCredentialsDto: AuthCredentialsDto): Promise<void> {
     const { username, password } = authCredentialsDto;
-    const user = this.userRepository.create({ username, password });
-    await this.userRepository.save(user);
+    const salt = await bcrypt.genSalt();
+    const hashedPassword = await bcrypt.hash(password, salt);
+
+    const user = this.userRepository.create({
+      username,
+      password: hashedPassword,
+    });
+    try {
+      await this.userRepository.save(user);
+    } catch (error) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      if (error.code === '23505') {
+        throw new Error('Username already exists');
+      } else {
+        throw new InternalServerErrorException();
+      }
+    }
   }
 }
