@@ -46,7 +46,7 @@ export class AuthService {
 
     if (user && (await bcrypt.compare(password, user.password))) {
       // 유저 토큰 생성 (secret + payload)
-      const payload = { username };
+      const payload = { username: user.username };
       const accessToken = this.jwtService.sign(payload);
 
       return { accessToken };

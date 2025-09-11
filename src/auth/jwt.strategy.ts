@@ -19,7 +19,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  async validate(payload) {
+  async validate(payload: any) {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const { username } = payload;
     const user = await this.userRepository.findOne({
